@@ -8,17 +8,60 @@
 import SwiftUI
 
 struct ContentView: View {
+    let fruits = [
+        Fruit(name: "Apelsin", color: .orange),
+        Fruit(name: "Banan", color: .yellow),
+        Fruit(name: "Citron", color: .yellow)
+    ]
+    @State private var selectedFruit: Fruit? = nil
+
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationView {
+            List(fruits, id: \.name) { fruit in
+                NavigationLink(destination: FruitView(fruit: fruit, isSelected: $selectedFruit)) {
+                    Text(fruit.name)
+                        .foregroundColor(fruit.color)
+                }
+            }
+            .navigationBarTitle("Frukter")
         }
-        .padding()
     }
 }
 
-#Preview {
-    ContentView()
+struct ContentView_Previews: PreviewProvider {
+    static var previews: some View {
+        ContentView()
+    }
 }
+
+struct FruitView: View {
+    let fruit: Fruit
+    @Binding var isSelected: Fruit?
+
+    var body: some View {
+        VStack {
+            Text("Du har valt:")
+                .font(.title)
+                .padding(.bottom, 20)
+
+            Text(fruit.name)
+                .font(.largeTitle)
+                .foregroundColor(fruit.color)
+                .padding(.bottom, 40)
+
+            Spacer()
+        }
+        .navigationBarTitle("Frukt")
+    }
+}
+
+struct Fruit: Identifiable {
+    var id = UUID()
+    var name: String
+    var color: Color
+}
+
+
+
+
+
